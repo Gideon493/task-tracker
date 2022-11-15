@@ -1,23 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import AddTask from "./components/AddTask";
+import Button from "./components/Button";
+import Header from "./components/Header";
+import NewTasks from "./components/NewTasks";
+import Tasks from "./components/Tasks";
 
-function App() {
+const App = () => {
+  const [showTask, setShowTask] = useState(false)
+  const [newTasks, setNewTasks] = useState(null)
+  const [tasks, setTasks] = useState([
+    {
+      id: 1,
+      text: "Complete Mern Projects",
+    },
+  ]);
+  useEffect(() => {
+    const getTasks = async () => {
+      const apiTasks = await fetchTasks()
+      setNewTasks(apiTasks)
+    }
+    getTasks()
+  }, [])
+  const fetchTasks = async () => {
+    const res = await fetch('http://localhost:1700/tasks')
+    const data = await res.json()
+    console.log(data);
+    return data
+  }
+
+  const handleDelete = (id) => {
+    // const newTasks = tasks.filter(task => task.id !== id);
+    //setTasks(newTasks)
+    setTasks(tasks.filter((task) => task.id !== id))
+    setNewTasks(newTasks.filter((newTask) => newTask.id !== id))
+  }
+  const handleShowtask = () => {
+    setShowTask(true)
+  }
+  const removeShowtask = () => {
+    setShowTask(false)
+  }
+  const onAddTask = (task) => {
+    //const id = Math.floor(Math.random() * 1000) + 1
+    //const newTask = { ...task }
+    //setTasks([tasks, newTask])
+    setTasks([...tasks, task]);
+    console.log(task);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className=" py-4 my-5 px-20 mx-40 border border-cyan-700">
+      <div className="py-6 px-20 mx-20 my-3 flex flex-row justify-between">
+        <Header />
+        <Button handleShowtask={handleShowtask} />
+      </div>
+      {showTask && <AddTask removeShowtask={removeShowtask} onAddTask={onAddTask} />}
+      {tasks.length > 0 ? <Tasks tasks={tasks} handleDelete={handleDelete} removeShowtask={removeShowtask} /> : <div className="text-3xl text-center font-bold text-red-500">No tasks to show</div>}
+      {newTasks && <NewTasks newTasks={newTasks} handleDelete={handleDelete} />}
     </div>
   );
 }
