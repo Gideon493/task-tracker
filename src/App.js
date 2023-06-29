@@ -13,6 +13,7 @@ const App = () => {
       id: 1,
       text: "Complete Mern Projects",
     },
+
   ]);
   useEffect(() => {
     const getTasks = async () => {
@@ -29,8 +30,6 @@ const App = () => {
   }
 
   const handleDelete = (id) => {
-    // const newTasks = tasks.filter(task => task.id !== id);
-    //setTasks(newTasks)
     setTasks(tasks.filter((task) => task.id !== id))
     setNewTasks(newTasks.filter((newTask) => newTask.id !== id))
   }
@@ -41,9 +40,6 @@ const App = () => {
     setShowTask(false)
   }
   const onAddTask = (task) => {
-    //const id = Math.floor(Math.random() * 1000) + 1
-    //const newTask = { ...task }
-    //setTasks([tasks, newTask])
     setTasks([...tasks, task]);
     console.log(task);
   }
